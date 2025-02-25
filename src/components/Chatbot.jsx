@@ -28,7 +28,11 @@ function Chatbot() {
                 params: { key: import.meta.env.VITE_GEMINI_API_KEY },
             }
         );
-        dispatch(addMessage({ sender: "bot", text: response.data.candidates[0].content.parts[0].text }));
+        const aiRes = response.data.candidates[0].content.parts[0].text;
+        const formattedRes = aiRes.split("\n").map((line, index) => (
+            <dl key={index} className="p-1">{line}</dl>
+        ))
+        dispatch(addMessage({ sender: "bot", text: formattedRes }));
     } catch (error) {
         console.error("Error fetching AI response:", error.response?.data || error.message);
     }
@@ -40,7 +44,8 @@ function Chatbot() {
         <div className="h-80 overflow-y-auto border p-2">
           {messages.map((msg, index) => (
             <div key={index} className={`p-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-              <strong>{msg.sender === "user" ? "You" : "AI"}:</strong> {msg.text}
+              <strong>{msg.sender === "user" ? "You" : "AI"}:</strong>
+              { msg.sender === 'AI' ? <div className="list-disc pl-4">{msg.text}</div> : <p>{msg.text}</p> }
             </div>
           ))}
         </div>
