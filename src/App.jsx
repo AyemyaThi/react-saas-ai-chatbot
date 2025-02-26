@@ -1,12 +1,13 @@
 import { Provider } from 'react-redux'
-import store from './store'
+import store from './store.js'
 import Chatbot from './components/Chatbot'
+import Auth from './components/Auth'
 
 function App() {
   return (
     <Provider store={store}>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-        <h1 className="text-2xl font-bold mb-4"> AI Chatbot</h1>
+        <Auth />
         <Chatbot />
       </div>
     </Provider>

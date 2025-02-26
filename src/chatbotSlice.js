@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 //Init state
 const initialState = {
     messages: [],
+    user: null,
 };
 
 const chatbotSlice = createSlice({
@@ -11,9 +12,12 @@ const chatbotSlice = createSlice({
     reducers: {
         addMessage: (state, action) => {
             state.messages.push(action.payload)
+        },
+        setUser: (state, action) => {
+            state.user = action.payload
         }
-    }
+    },
 });
 
-export const { addMessage } = chatbotSlice.actions;
+export const { addMessage, setUser } = chatbotSlice.actions;
 export default chatbotSlice;

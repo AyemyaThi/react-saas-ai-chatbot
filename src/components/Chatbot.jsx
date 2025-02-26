@@ -9,8 +9,13 @@ import { CardContent } from "../components/ui/CardContent";
 
 function Chatbot() {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.chatbot.user);
   const messages = useSelector((state) => state.chatbot.messages);
   const [input, setInput] = useState("");
+
+  if (!user) {
+    return <p className="text-center text-gray-700">User not authenticated. Please log in.</p>;
+  }
 
   const sendMessage = async () => {
     if (!input) return;
@@ -19,7 +24,7 @@ function Chatbot() {
 
     try {
         const response = await axios.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+            "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent",
             {
                 contents: [{ parts: [{ text: input }] }],
             },
@@ -39,22 +44,25 @@ function Chatbot() {
   };
 
   return (
-    <Card className="w-full max-w-lg p-4">
-      <CardContent>
-        <div className="h-80 overflow-y-auto border p-2">
-          {messages.map((msg, index) => (
-            <div key={index} className={`p-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-              <strong>{msg.sender === "user" ? "You" : "AI"}:</strong>
-              { msg.sender === 'AI' ? <div className="list-disc pl-4">{msg.text}</div> : <p>{msg.text}</p> }
-            </div>
-          ))}
-        </div>
-        <div className="mt-2 flex gap-2">
-          <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
-          <Button onClick={sendMessage}>Send</Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div>
+        <h1 className="text-2xl font-bold mb-4"> AI Chatbot</h1>
+        <Card className="w-full max-w-lg p-4">
+            <CardContent>
+                <div className="h-80 overflow-y-auto border p-2">
+                {messages.map((msg, index) => (
+                    <div key={index} className={`p-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+                    <strong>{msg.sender === "user" ? "You" : "AI"}:</strong>
+                    { msg.sender === 'AI' ? <div className="list-disc pl-4">{msg.text}</div> : <p>{msg.text}</p> }
+                    </div>
+                ))}
+                </div>
+                <div className="mt-2 flex gap-2">
+                <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
+                <Button onClick={sendMessage}>Send</Button>
+                </div>
+            </CardContent>
+        </Card>
+    </div>
   );
 }
 
